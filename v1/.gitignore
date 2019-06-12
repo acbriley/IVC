@@ -1,0 +1,13 @@
+*~
+*.swp
+*.swo
+.git/*
+node_modules/*
+.coverage*
+.viminfo
+.vscode/*
+*.db
+.DS_Store
+.idea
+.vagrant/*
+.lock
