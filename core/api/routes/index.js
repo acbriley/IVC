@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const passport = require('passport');
-const User = require('../models/user');
+const User = require('../../data/models/user');
 
 // home page/ root route
 router.get("/", function(req,res){
@@ -40,18 +40,17 @@ router.get("/login", function(req,res){
 });
 
 // HANDLING LOGIN LOGIC
-router.post("/login", passport.authenticate("local", 
-    {
-        successRedirect: "/campgrounds", 
-        failureRedirect: "/login"
-    
-    }), function(req,res){
-});
+// router.post("/login", passport.authenticate("local", 
+//     {
+//         successRedirect: "/voyages", 
+//         failureRedirect: "/login"
+//     }), function(req,res){
+// });
 
-// LOGOUT ROUTE
-router.get("/logout", function(req,res){
-    req.logout();
-    res.redirect("/");
-});
+// // LOGOUT ROUTE
+// router.get("/logout", function(req,res){
+//     req.logout();
+//     res.redirect("/");
+// });
 
-module.exports = router;
+module.exports.router = router;

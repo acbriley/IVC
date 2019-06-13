@@ -1,11 +1,16 @@
-const mongoose = require('mongoose');
-const passportLocalMongoose = require('passport-local-mongoose')
+const Sequelize = require('sequelize');
+const db = require('../db/index')
 
-const UserSchema = new mongoose.Schema({
-    username: String,
-    password: String
+const User = db.define('user',{
+    firstName: {
+        type: Sequelize.STRING,
+    },
+    lastName: {
+        type: Sequelize.STRING,
+    },
+    email: {
+        type: Sequelize.STRING,
+    }
 });
 
-UserSchema.plugin(passportLocalMongoose);
-
-module.exports = mongoose.model("User", UserSchema);
+module.exports.User = User;
