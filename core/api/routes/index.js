@@ -1,17 +1,18 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const User = require('../../data/models/user');
 
+
 // home page/ root route
-router.get("/", function(req,res){
+router.get("/", (req,res) => {
 // *******************need front end landing page***********************
     // res.render("landing");
     res.send("index route");
 });
 
 // register form
-router.get("/register", function(req,res){
+router.get("/register", (req,res) => {
 //******************** *need front end register page***************
     // res.render("register")
     res.send("register route");
@@ -33,7 +34,7 @@ router.get("/register", function(req,res){
         // });
 
 // SHOW LOGIN FORM
-router.get("/login", function(req,res){
+router.get("/login", (req,res) => {
 // ************need front end login page**********************************
     // res.render("login");
     res.send("login page");
@@ -53,4 +54,4 @@ router.get("/login", function(req,res){
 //     res.redirect("/");
 // });
 
-module.exports.router = router;
+module.exports = router;

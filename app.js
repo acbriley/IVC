@@ -6,7 +6,7 @@ const localStrategy = require('passport-local');
 const User = require('./core/data/models/user');
 
 // DB setup
-const db = require('./core/data/db/index')
+const db = require('./core/data/db/index');
 
 // TEST DB
 db.authenticate()
@@ -14,14 +14,18 @@ db.authenticate()
     .catch(err => console.log('Error:' + err))
 
 // require routes
-const indexRoutes = require("./core/api/routes/index").default
-const voyageRoutes = require("./core/api/routes/voyage")
+const indexRoutes = require("./core/api/routes/index");
+const voyageRoutes = require("./core/api/routes/voyage");
 
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 // configure routes
-app.use("/",indexRoutes);
+
+app.use("/", indexRoutes);
+
+// app.use(app.router);
+// indexRoutes.initialize(app)
 app.use("/voyages", voyageRoutes);
 
 const PORT = process.env.PORT || 5000;
