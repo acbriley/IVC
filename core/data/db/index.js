@@ -1,6 +1,7 @@
 // sets up our database using default setup from sequelize docs online
 const Sequelize = require('sequelize');
-module.exports = new Sequelize('user', 'postgres', 'Jamjam95', {
+
+module.exports = new Sequelize('IVC', 'postgres', 'Jamjam95', {
   host: 'localhost',
   dialect: 'postgres',
   pool: {
