@@ -3,13 +3,14 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const postgresConnect = require('./core/platform/postgres');
 const localStrategy = require('passport-local');
-const User = require('./models/user');
+const User = require('./core/data/models/user');
 const port = 3000;
 
 // require routes
-const indexRoutes = require("./routes/index")
-const voyageRoutes = require("./routes/voyage")
+const indexRoutes = require("./core/api/routes/index")
+const voyageRoutes = require("./core/api/routes/voyage")
 
 // passport config
 app.use(passport.initialize());
@@ -28,5 +29,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use("/",indexRoutes);
 app.use("/voyages", voyageRoutes);
 
+var sql = postgresConnect();
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
