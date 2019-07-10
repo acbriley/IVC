@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import NavMenu from './NavMenu.js';
+import User from './User/User.js';
 import VoyageStatus from './VoyageStatus';
 import VoyageSummary from './VoyageSummary';
 import './HomeDash.css';
@@ -6,10 +8,12 @@ import './HomeDash.css';
 class HomeDash extends Component{
   render(){
     return(
-      <div className="HomeDash">
-        <VoyageStatus />
-        <VoyageSummary />
-      </div>
+      <BrowserRouter>
+        <div className="HomeDash">
+          <NavMenu />
+          <User />
+        </div>
+      </BrowserRouter>
     );
   }
 }
