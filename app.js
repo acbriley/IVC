@@ -20,8 +20,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // DB setup
-var url = "mongodb+srv://acbriley:Jamjam95@ivc-sp4s0.mongodb.net/test?retryWrites=true&w=majority"
-mongoose.connect(url, {useNewUrlParser: true});
 
 app.use(bodyParser.urlencoded({extended: true}));
 
