@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const postgresConnect = require('./core/platform/postgres');
 const localStrategy = require('passport-local');
@@ -20,8 +19,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // DB setup
-var url = "mongodb+srv://acbriley:Jamjam95@ivc-sp4s0.mongodb.net/test?retryWrites=true&w=majority"
-mongoose.connect(url, {useNewUrlParser: true});
 
 app.use(bodyParser.urlencoded({extended: true}));
 
