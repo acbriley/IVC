@@ -1,4 +1,9 @@
+const Sequelize = require('sequelize');
 const config = require("../../config/config.js")
+const db = require("../../platform/postgres")
+
+sequelize = db.sequelize;
+const Model = Sequelize.Model;
 
 class User extends Model {}
 User.init({
@@ -71,4 +76,4 @@ async function update(dict) {
     return user;
 };
 
-module.exports = {create, get, del, update};
+module.exports = {User, create, get, del, update};

@@ -1,4 +1,9 @@
 const config = require("../../config/config.js")
+const Sequelize = require('sequelize');
+const db = require("../../platform/postgres")
+
+sequelize = db.sequelize;
+const Model = Sequelize.Model;
 
 class VoyageInstance extends Model {}
 VoyageInstance.init({

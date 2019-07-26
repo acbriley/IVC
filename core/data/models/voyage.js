@@ -1,4 +1,9 @@
 const config = require("../../config/config.js")
+const Sequelize = require('sequelize');
+const db = require("../../platform/postgres")
+
+sequelize = db.sequelize;
+const Model = Sequelize.Model;
 
 class Voyage extends Model {}
 Voyage.init({
@@ -38,6 +43,17 @@ async function get(id) {
     return voyage;
 };
 
+async function find(findDict) {
+    try {
+        var voyages =  await Voyage.findAll({ where: findDict});
+    }
+    catch (error) {
+      throw Error(error);
+    }
+
+    return voyages;
+};
+
 async function del(id) {
     try {
         let voyage =  await Voyage.findByPk(id);
@@ -64,4 +80,4 @@ async function update(dict) {
     return voyage;
 };
 
-module.exports = {Voyage, create, get, del, update};
+module.exports = {Voyage, create, get, find, del, update};

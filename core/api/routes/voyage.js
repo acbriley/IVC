@@ -1,10 +1,13 @@
 const express = require('express')
 const router = express.Router();
+const dbvoyage = require("../../data/models/voyage")
 
-router.get("/", function(req,res,next){
+router.get("/", async function(req,res,next){
 // *********************need front end display voyage page***************
     // res.render("voyages");
-    res.send("About The Voyages");
+    await dbvoyage.create("test", "test",)
+    voyages = await dbvoyage.find({})
+    res.send(voyages);
 });
 
 router.get("/:id", function(req,res){
