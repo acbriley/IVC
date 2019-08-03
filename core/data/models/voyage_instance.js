@@ -38,6 +38,17 @@ async function get(id) {
     return voyage;
 };
 
+async function find(findDict) {
+  try {
+      var voyages =  await VoyageInstance.findAll({ where: findDict});
+  }
+  catch (error) {
+    throw Error(error);
+  }
+
+  return voyages;
+};
+
 async function del(id) {
     try {
         let voyage =  await VoyageInstance.findByPk(id);
@@ -64,4 +75,4 @@ async function update(dict) {
     return voyage;
 };
 
-module.exports = {VoyageInstance, create, get, del, update};
+module.exports = {VoyageInstance, create, find, get, del, update};

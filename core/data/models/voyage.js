@@ -1,6 +1,7 @@
 const config = require("../../config/config.js")
 const Sequelize = require('sequelize');
 const db = require("../../platform/postgres")
+var validate = require("validate.js");
 
 sequelize = db.sequelize;
 const Model = Sequelize.Model;
@@ -20,6 +21,7 @@ Voyage.init({
   }
 }, { sequelize, modelName: 'voyage' });
 
+// Raises validation error if validation fails, with relevant validation field
 async function create(name, formatJson) {
     try {
         var voyage =  await Voyage.create({ name: name, formatJson: formatJson });
@@ -67,6 +69,7 @@ async function del(id) {
     return result;
 };
 
+// Raises validation error if validation fails, with relevant validation field
 async function update(dict) {
     try {
         var voyage =  await Voyage.findByPk(id);
@@ -80,4 +83,34 @@ async function update(dict) {
     return voyage;
 };
 
+
 module.exports = {Voyage, create, get, find, del, update};
+
+/*
+example format for the json format of a voyage:
+every node in the sequence list is a differenet screen/stage of the voyage.
+every stage/screen is also a list, where every node represents an item, 
+either an image, video or a text.
+front end will get this format, and present the user with the right stage according to the list.
+then, on that screen the front end will present, top-down, the items in that stage, in order. 
+{
+"sequence": 
+[ 
+  [ {"type": "text",
+     "value": "lorem"},
+     {"type": "video",
+      value: "video1.avi"}
+  ] ,
+  [
+     {"type": "text",
+      "value": "ipsum"},
+     {"type": "image",
+      "value"}
+  ],
+  [],
+  []
+]
+}
+
+
+*/

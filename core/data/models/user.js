@@ -10,6 +10,7 @@ User.init({
   username: {
     type: Sequelize.STRING(config.user_max_chars),
     allowNull: false,
+    unique: true,
     get() { return this.getDataValue('username'); },
     set(val) {this.setDataValue('username', val);}
   },
@@ -22,14 +23,28 @@ User.init({
   email: {
     type: Sequelize.STRING(config.email_max_chars),
     allowNull: false,
+    unique: true,
     get() { return this.getDataValue('email'); },
     set(val) {this.setDataValue('email', val);}
+  },
+  salt: {
+    type: Sequelize.STRING(config.salt_max_chars),
+    allowNull: false,
+    get() { return this.getDataValue('salt'); },
+    set(val) {this.setDataValue('salt', val);}
+  },
+  passHash: {
+    type: Sequelize.STRING(config.hash_max_chars),
+    allowNull: false,
+    get() { return this.getDataValue('passHash'); },
+    set(val) {this.setDataValue('passHash', val);}
   }
 }, { sequelize, modelName: 'user' });
 
-async function create(username, fullName, email) {
+async function create(username, fullName, email, salt, hash) {
     try {
-        var user =  await User.create({ username: username, fullName: fullName, email: email });
+        var user = 
+         await User.create({ username: username, fullName: fullName, email: email, salt:salt, passHash: hash });
     }
     catch (error) {
       throw Error(error);
@@ -63,6 +78,28 @@ async function del(id) {
     return result;
 };
 
+async function find(findDict) {
+  try {
+      var users =  await User.findAll({ where: findDict});
+  }
+  catch (error) {
+    throw Error(error);
+  }
+
+  return voyages;
+};
+
+async function getByUserame(username) {
+  try {
+      var user =  await User.findOne({ where: {"username": username}});
+  }
+  catch (error) {
+    throw Error(error);
+  }
+
+  return user;
+};
+
 async function update(dict) {
     try {
         var user =  await User.findByPk(id);
@@ -76,4 +113,16 @@ async function update(dict) {
     return user;
 };
 
-module.exports = {User, create, get, del, update};
+async function doesExist(username) {
+  try {
+      var count =  await User.count({where: {'username': username}});
+      if (count > 0) 
+        return true;
+      return false;
+  }
+  catch (error) {
+    throw Error(error);
+  }
+}
+
+module.exports = {User, create, get, del, update, find, getByUserame, doesExist};
