@@ -1,7 +1,6 @@
 const config = require("../../config/config.js")
 const Sequelize = require('sequelize');
 const db = require("../../platform/postgres")
-var validate = require("validate.js");
 
 sequelize = db.sequelize;
 const Model = Sequelize.Model;

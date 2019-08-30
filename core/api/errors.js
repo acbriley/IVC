@@ -1,15 +1,15 @@
-import { ValidationError, EmptyResultError } from "sequelize/types/lib/errors";
+import { ValidationError, EmptyResultError} from "sequelize/lib/errors";
 
 function errorHandler(err, req, res, next) {
     // TODO: log error
     if (err instanceof ValidationError) {
-        res.status(403).send(err);
+        return res.status(403).send(err.message);
     }
     else if (err instanceof EmptyResultError) {
-        res.status(404).send(err);
+        return res.status(404).send(err.message);
     }
     else {
-        res.status(500).send("oops");
+        return res.status(500).send(err.message);
     }
   }
 
