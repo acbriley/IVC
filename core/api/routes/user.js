@@ -1,34 +1,64 @@
 const express = require('express')
 const router = express.Router();
 const dbUser = require("../../data/models/user")
-const jwt = require('jsonwebtoken');
-import {encryptPass} from '../authentication'
+const asyncHandler = require('express-async-handler')
+import {authorize, encryptPass, passport, generateToken} from '../authentication'
+import {validate, ValidationError} from 'jsonschema'
 
-router.get("/", async function(req,res,next){
-    users = await dbUser.find({})
+router.get("/", authorize(["admin"]), asyncHandler(async function(req,res,next){
+    let users = await dbUser.find({})
     res.send(users);
-});
+}));
 
-router.get("/:id", async function(req,res){
+router.get("/:id", authorize(["user", "admin"]), asyncHandler(async function(req,res,next){
         let id = req.params.id;
+        if (isNaN(id)) return res.status(404).send();
+        if (req.user_id != id) return res.status(401).send();
         let user = await dbUser.get(id);
         res.send(user);
-});
+}));
 
-router.get("/exist/:username", async function(req,res){
+router.get("/exist/:username", authorize(["user", "admin"]),
+           asyncHandler(async function(req,res,next){
     let username = req.params.username;
     let result = await dbUser.doesExist(username);
     res.send(JSON.stringify(result));
-});
+}));
 
-router.post("/register", async function(req,res,next){
+router.post("/register", asyncHandler(async function(req,res,next){
         let user = req.body.user;
-        let encrypted = encryptPass(user.password)
-        await dbUser.create(user.username, user.fullname, user.email, encrypted.salt, encrypted.hash);
-        res.status(201).send();
-});
+        if (!user) {throw ValidationError('Missing User Object')};
+        var schema = {
+          "type": "object",
+          "properties": {
+            "username": {"type": "string"},
+            "fullname": {"type": "string"},
+            "email": {"type": "string"},
+            "password": {"type": "string"}
+          },
+          "required": ["username", "fullname" , "email", "password"], 
+          "additionalProperties": true,
+        };
 
-router.post("/login", async function(req,res,next){
+        validate(user, schema, {throwError: true}).valid;
+        let encrypted = encryptPass(user.password)
+        let result = await dbUser.create(user.username, user.fullname, user.email, encrypted.salt, encrypted.hash, ["user"]);
+        if (result instanceof Error) {throw result;}
+        res.status(201).send();
+}));
+
+router.post("/login", asyncHandler(async function(req,res,next){
+    var schema = {
+      "type": "object",
+      "properties": {
+        "username": {"type": "string"},
+        "password": {"type": "string"}
+      },
+      "required": ["username", "password"], 
+      "additionalProperties": true,
+    };
+
+    validate(req.body, schema, {throwError: true});
     return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
         if(err) {return next(err);}
         if(passportUser) {
@@ -40,16 +70,6 @@ router.post("/login", async function(req,res,next){
     
         return res.status(400).send(info);
       })(req, res, next);
-});
-
-function generateToken(username, ip) {
-    let expiry = (new Date().getTime() / 1000) + 60 * 60 * 24 * 14
-    // TODO: store secret securely somewhere
-    return jwt.sign({
-      username: username,
-      ip: ip,
-      exp: parseInt(expiry, 10),
-    }, 'secret');
-  }
+}));
 
 module.exports = router;
